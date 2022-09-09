@@ -74,5 +74,22 @@ namespace FLP_organizer
         {
             Application.Exit();
         }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string selected = treeView1.SelectedNode.Text;
+
+            // add check if selected item is a "root" node
+            try
+            {
+
+                //todo: when folder is not empty: error will be thrown
+                Directory.Delete(_root.FullName + "\\" + selected);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }
