@@ -8,7 +8,7 @@ namespace FLP_organizer
 {
     public partial class Main : Form
     {
-        private DirectoryInfo _root = new DirectoryInfo(Properties.Settings.Default.projectFolder);
+        private readonly DirectoryInfo _root = new DirectoryInfo(Properties.Settings.Default.projectFolder);
 
         public Main()
         {
@@ -26,6 +26,7 @@ namespace FLP_organizer
 
         private void LoadDirectory(DirectoryInfo start)
         {
+            TreeNode root = new TreeNode(Properties.Settings.Default.projectFolder);
             foreach(DirectoryInfo dir in start.GetDirectories())
             {
                 TreeNode nodes = new TreeNode(dir.Name);
@@ -44,8 +45,10 @@ namespace FLP_organizer
                 {
                     MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                treeView1.Nodes.Add(nodes);
+                root.Nodes.Add(nodes);
             }
+            tree.Nodes.Add(root);
+            root.Expand();
         }
 
         private void NewProjectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -56,7 +59,7 @@ namespace FLP_organizer
 
         public void ReloadTreeView()
         {
-            treeView1.Nodes.Clear();
+            tree.Nodes.Clear();
             LoadDirectory(_root);
         }
 
@@ -72,18 +75,17 @@ namespace FLP_organizer
 
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string selected = treeView1.SelectedNode.Text;
+            string selected = tree.SelectedNode.Text;
             
             // add check if selected item is a "root" node
             try
             {
                 //check if selected node is direct child of root
-                if (!Checker.Check(treeView1)) return;
-
-
+                if (!Checker.Check(tree)) return;
 
                 //todo: when folder is not empty: error will be thrown
-                Directory.Delete(_root.FullName + "\\" + selected);
+                Directory.Delete(_root.FullName + "\\" + selected, true);
+                ReloadTreeView();
             }
             catch (Exception ex)
             {
