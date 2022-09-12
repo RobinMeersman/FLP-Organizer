@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FLP_organizer
@@ -42,7 +35,7 @@ namespace FLP_organizer
                 Directory.CreateDirectory(nDir);
                 Directory.CreateDirectory(nDir + "\\YT");
             }
-            _main.reloadTreeView();
+            _main.ReloadTreeView();
             Hide();
         }
     }

@@ -67,6 +67,7 @@
     <Compile Include="AddProject.Designer.cs">
       <DependentUpon>AddProject.cs</DependentUpon>
     </Compile>
+    <Compile Include="Checker.cs" />
     <Compile Include="Setup.cs">
       <SubType>Form</SubType>
     </Compile>

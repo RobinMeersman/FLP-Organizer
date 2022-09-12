@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
@@ -26,10 +21,10 @@ namespace FLP_organizer
             this.Size = new Size(700, 500);
 
             //load folderstructure in treeview:
-            loadDirectory(_root);
+            LoadDirectory(_root);
         }
 
-        private void loadDirectory(DirectoryInfo start)
+        private void LoadDirectory(DirectoryInfo start)
         {
             foreach(DirectoryInfo dir in start.GetDirectories())
             {
@@ -53,42 +48,47 @@ namespace FLP_organizer
             }
         }
 
-        private void newProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NewProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AddProject addProject = new AddProject(this);
             addProject.Show();
         }
 
-        public void reloadTreeView()
+        public void ReloadTreeView()
         {
             treeView1.Nodes.Clear();
-            loadDirectory(_root);
+            LoadDirectory(_root);
         }
 
-        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ReloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            reloadTreeView();
+            ReloadTreeView();
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string selected = treeView1.SelectedNode.Text;
-
+            
             // add check if selected item is a "root" node
             try
             {
+                //check if selected node is direct child of root
+                if (!Checker.Check(treeView1)) return;
+
+
 
                 //todo: when folder is not empty: error will be thrown
                 Directory.Delete(_root.FullName + "\\" + selected);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                MessageBox.Show(selected + " can not be deleted", "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.Error.WriteLine(ex.Message);
             }
         }
     }
