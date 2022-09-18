@@ -10,8 +10,7 @@ namespace FLP_organizer
             if(tree == null || tree.SelectedNode == null) return false;
 
             //check if selected node is a direct child of the root node of the tree
-            TreeNode selected = tree.SelectedNode;
-            return selected.Parent == tree.Nodes[0];
+            return tree.SelectedNode.Parent == tree.Nodes[0];
         }
     }
 }

@@ -68,6 +68,12 @@
       <DependentUpon>AddProject.cs</DependentUpon>
     </Compile>
     <Compile Include="Checker.cs" />
+    <Compile Include="Rename.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Rename.Designer.cs">
+      <DependentUpon>Rename.cs</DependentUpon>
+    </Compile>
     <Compile Include="Setup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AddProject.resx">
       <DependentUpon>AddProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rename.resx">
+      <DependentUpon>Rename.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Setup.resx">
       <DependentUpon>Setup.cs</DependentUpon>

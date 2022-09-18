@@ -49,6 +49,7 @@ namespace FLP_organizer
             }
             tree.Nodes.Add(root);
             root.Expand();
+            tree.SelectedNode = tree.Nodes[0].Nodes[0];
         }
 
         private void NewProjectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -75,23 +76,50 @@ namespace FLP_organizer
 
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string selected = tree.SelectedNode.Text;
+            string selected = tree.SelectedNode != null ? tree.SelectedNode.Text : "";
             
             // add check if selected item is a "root" node
             try
             {
                 //check if selected node is direct child of root
-                if (!Checker.Check(tree)) return;
+                if (selected.Length == 0 && !Checker.Check(tree)) return;
 
-                //todo: when folder is not empty: error will be thrown
                 Directory.Delete(_root.FullName + "\\" + selected, true);
                 ReloadTreeView();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(selected + " can not be deleted", "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(selected + " can not be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.Error.WriteLine(ex.Message);
             }
+        }
+
+        private void RenameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string selected = tree.SelectedNode != null ? tree.SelectedNode.Text : "";
+
+            try
+            {
+                if (selected.Length == 0 && !Checker.Check(tree)) return;
+
+                if (!Directory.Exists(_root.FullName + "\\" + selected))
+                {
+                    MessageBox.Show(selected + " does not exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                
+                
+            } catch (Exception ex)
+            {
+                //todo: fix errormessage
+                MessageBox.Show(selected + " can not be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.Error.WriteLine(ex.Message);
+            }
+        }
+
+        private void RenameFolder(string from, string to)
+        {
+            Directory.Move(from, to);
         }
     }
 }
