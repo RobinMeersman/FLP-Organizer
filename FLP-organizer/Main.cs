@@ -27,6 +27,7 @@ namespace FLP_organizer
         private void LoadDirectory(DirectoryInfo start)
         {
             TreeNode root = new TreeNode(Properties.Settings.Default.projectFolder);
+            if (start.GetDirectories().Length <= 0) return;
             foreach(DirectoryInfo dir in start.GetDirectories())
             {
                 TreeNode nodes = new TreeNode(dir.Name);
