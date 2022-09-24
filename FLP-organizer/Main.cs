@@ -9,6 +9,7 @@ namespace FLP_organizer
     public partial class Main : Form
     {
         private readonly DirectoryInfo _root = new DirectoryInfo(Properties.Settings.Default.projectFolder);
+        private string _selected;
 
         public Main()
         {
@@ -27,7 +28,10 @@ namespace FLP_organizer
         private void LoadDirectory(DirectoryInfo start)
         {
             TreeNode root = new TreeNode(Properties.Settings.Default.projectFolder);
+
+            // if the projectfolder is a new folder, no items will be present so we can return out faster
             if (start.GetDirectories().Length <= 0) return;
+
             foreach(DirectoryInfo dir in start.GetDirectories())
             {
                 TreeNode nodes = new TreeNode(dir.Name);
@@ -51,6 +55,7 @@ namespace FLP_organizer
             tree.Nodes.Add(root);
             root.Expand();
             tree.SelectedNode = tree.Nodes[0].Nodes[0];
+            _selected = tree.SelectedNode.Text;
         }
 
         private void NewProjectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -77,45 +82,51 @@ namespace FLP_organizer
 
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string selected = tree.SelectedNode != null ? tree.SelectedNode.Text : "";
+            _selected = tree.SelectedNode != null ? tree.SelectedNode.Text : "";
             
             // add check if selected item is a "root" node
             try
             {
                 //check if selected node is direct child of root
-                if (selected.Length == 0 && !Checker.Check(tree)) return;
+                if (_selected.Length == 0 && !Checker.Check(tree)) return;
 
-                Directory.Delete(_root.FullName + "\\" + selected, true);
+                Directory.Delete(_root.FullName + "\\" + _selected, true);
                 ReloadTreeView();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(selected + " can not be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_selected + " can not be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.Error.WriteLine(ex.Message);
             }
         }
 
         private void RenameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string selected = tree.SelectedNode != null ? tree.SelectedNode.Text : "";
+            _selected = tree.SelectedNode != null ? tree.SelectedNode.Text : "";
 
             try
             {
-                if (selected.Length == 0 && !Checker.Check(tree)) return;
+                if (_selected.Length == 0 && !Checker.Check(tree)) return;
 
-                if (!Directory.Exists(_root.FullName + "\\" + selected))
+                if (!Directory.Exists(_root.FullName + "\\" + _selected))
                 {
-                    MessageBox.Show(selected + " does not exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(_selected + " does not exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                
-                
+                new Rename(this).Show();                
             } catch (Exception ex)
             {
-                //todo: fix errormessage
-                MessageBox.Show(selected + " can not be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_selected + " can not be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.Error.WriteLine(ex.Message);
             }
+        }
+
+        public void SetNewFolder(string name)
+        {
+            if (name == null || name == "") return;
+
+            //BUG!!!!
+            RenameFolder(_root.FullName + "\\" + _selected, _root.FullName + "\\" + name);
         }
 
         private void RenameFolder(string from, string to)

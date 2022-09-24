@@ -22,7 +22,7 @@ namespace FLP_organizer
 
         private void okBtn_Click(object sender, EventArgs e)
         {
-            //todo: fill in to pass new foldername to Main
+            _m.SetNewFolder(textBox1.Text);
         }
     }
 }
