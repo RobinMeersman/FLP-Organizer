@@ -23,6 +23,16 @@ namespace FLP_organizer
         private void okBtn_Click(object sender, EventArgs e)
         {
             _m.SetNewFolder(textBox1.Text);
+            Hide();
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                _m.SetNewFolder(textBox1.Text);
+                Hide();
+            }
         }
     }
 }

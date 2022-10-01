@@ -31,7 +31,6 @@ namespace FLP_organizer
 
             // if the projectfolder is a new folder, no items will be present so we can return out faster
             if (start.GetDirectories().Length <= 0) return;
-
             foreach(DirectoryInfo dir in start.GetDirectories())
             {
                 TreeNode nodes = new TreeNode(dir.Name);
@@ -64,6 +63,7 @@ namespace FLP_organizer
             addProject.Show();
         }
 
+        // vind een betere, efficientere manier om de aanpassingen weer te geven
         public void ReloadTreeView()
         {
             tree.Nodes.Clear();
@@ -116,7 +116,7 @@ namespace FLP_organizer
                 new Rename(this).Show();                
             } catch (Exception ex)
             {
-                MessageBox.Show(_selected + " can not be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_selected + " can not be renamed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.Error.WriteLine(ex.Message);
             }
         }
@@ -127,6 +127,7 @@ namespace FLP_organizer
 
             //BUG!!!!
             RenameFolder(_root.FullName + "\\" + _selected, _root.FullName + "\\" + name);
+            ReloadTreeView();
         }
 
         private void RenameFolder(string from, string to)
