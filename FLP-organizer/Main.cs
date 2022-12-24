@@ -8,7 +8,7 @@ namespace FLP_organizer
 {
     public partial class Main : Form
     {
-        private readonly DirectoryInfo _root = new DirectoryInfo(Properties.Settings.Default.projectFolder);
+        private DirectoryInfo _root = new DirectoryInfo(Properties.Settings.Default.projectFolder);
         private string _selected;
 
         public Main()
@@ -87,7 +87,7 @@ namespace FLP_organizer
             // add check if selected item is a "root" node
             try
             {
-                //check if selected node is direct child of root
+                // check if selected node is direct child of root
                 if (_selected.Length == 0 && !Checker.Check(tree)) return;
 
                 Directory.Delete(_root.FullName + "\\" + _selected, true);
@@ -125,14 +125,34 @@ namespace FLP_organizer
         {
             if (name == null || name == "") return;
 
-            //BUG!!!!
             RenameFolder(_root.FullName + "\\" + _selected, _root.FullName + "\\" + name);
             ReloadTreeView();
         }
 
         private void RenameFolder(string from, string to)
         {
+            if (Directory.Exists(to))
+            {
+                MessageBox.Show("This folder already exists!", "Error", MessageBoxButtons.OK);
+                return;
+            }
             Directory.Move(from, to);
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            // todo: fix
+            string path = Properties.Settings.Default.projectFolder;
+            Console.WriteLine(path);
+            Settings s = new Settings();
+            s.Show();
+            Console.WriteLine(Properties.Settings.Default.projectFolder);
+            if (path != Properties.Settings.Default.projectFolder)
+            {
+                _root = new DirectoryInfo(Properties.Settings.Default.projectFolder);
+                LoadDirectory(_root);
+            }
         }
     }
 }
