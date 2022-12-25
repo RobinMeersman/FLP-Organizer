@@ -12,8 +12,11 @@ namespace FLP_organizer
 {
     public partial class Settings : Form
     {
-        public Settings()
+        private Main _m;
+        private bool changed = false;
+        public Settings(Main m)
         {
+            _m = m;
             InitializeComponent();
         }
 
@@ -27,8 +30,9 @@ namespace FLP_organizer
             FolderBrowserDialog f = new FolderBrowserDialog();
             f.ShowDialog();
 
-            if (!string.IsNullOrEmpty(f.SelectedPath))
+            if (!string.IsNullOrEmpty(f.SelectedPath) && f.SelectedPath != Properties.Settings.Default.projectFolder)
             {
+                changed = true;
                 textBox1.Text = f.SelectedPath;
                 Properties.Settings.Default.projectFolder = f.SelectedPath;
                 Properties.Settings.Default.Save();
@@ -37,6 +41,7 @@ namespace FLP_organizer
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if(changed) _m.ChangeDirTree();
             this.Hide();
         }
     }

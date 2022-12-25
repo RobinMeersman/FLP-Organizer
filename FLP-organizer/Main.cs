@@ -28,6 +28,7 @@ namespace FLP_organizer
         private void LoadDirectory(DirectoryInfo start)
         {
             TreeNode root = new TreeNode(Properties.Settings.Default.projectFolder);
+            tree.Nodes.Clear();
 
             // if the projectfolder is a new folder, no items will be present so we can return out faster
             if (start.GetDirectories().Length <= 0) return;
@@ -36,10 +37,13 @@ namespace FLP_organizer
                 TreeNode nodes = new TreeNode(dir.Name);
                 try
                 {
-                    nodes.Nodes.Add(dir.GetDirectories().First().Name);
-                    foreach (FileInfo f in dir.GetDirectories().First().GetFiles())
+                    if (dir.GetDirectories().Length != 0)
                     {
-                        nodes.Nodes[0].Nodes.Add(f.Name);
+                        nodes.Nodes.Add(dir.GetDirectories().First().Name);
+                        foreach (FileInfo f in dir.GetDirectories().First().GetFiles())
+                        {
+                            nodes.Nodes[0].Nodes.Add(f.Name);
+                        }
                     }
                     foreach (FileInfo file in dir.GetFiles())
                     {
@@ -129,6 +133,12 @@ namespace FLP_organizer
             ReloadTreeView();
         }
 
+        public void ChangeDirTree()
+        {
+            _root = new DirectoryInfo(Properties.Settings.Default.projectFolder);
+            LoadDirectory(_root);
+        }
+
         private void RenameFolder(string from, string to)
         {
             if (Directory.Exists(to))
@@ -141,18 +151,8 @@ namespace FLP_organizer
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
-            // todo: fix
-            string path = Properties.Settings.Default.projectFolder;
-            Console.WriteLine(path);
-            Settings s = new Settings();
+            Settings s = new Settings(this);
             s.Show();
-            Console.WriteLine(Properties.Settings.Default.projectFolder);
-            if (path != Properties.Settings.Default.projectFolder)
-            {
-                _root = new DirectoryInfo(Properties.Settings.Default.projectFolder);
-                LoadDirectory(_root);
-            }
         }
     }
 }
